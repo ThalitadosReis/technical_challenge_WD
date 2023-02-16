@@ -1,23 +1,53 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import { Routes, Route } from "react-router-dom";
+import PhoneDetails from "./components/PhoneDetails";
+import Homepage from "./components/Homepage";
+import PhonesList from "./components/PhonesList";
+import Navbar from "./components/Navbar";
+
+import axios from "axios";
+import { useState, useEffect } from "react";
 
 function App() {
+  const [phonesList, setPhonesList] = useState();
+  const [isLoading, setIsLoading] = useState(true);
+
+  const getAllPhones = () => {
+    axios
+      .get(`${process.env.REACT_APP_API_URL}/phones`)
+      .then((response) => {
+        setPhonesList(response.data);
+        setIsLoading(false);
+      })
+      .catch((error) =>
+        console.log("Error getting phones list from API", error)
+      );
+  };
+
+  useEffect(() => {
+    getAllPhones();
+  }, []);
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Navbar />
+      <Routes>
+        <Route 
+          exact 
+          path="/" 
+          element={<Homepage />} />
+
+        <Route
+          path="/phones"
+          element={<PhonesList 
+          phonesList={phonesList} />}
+        />
+
+        <Route
+          path="/phones/:phoneId"
+          element={<PhoneDetails 
+          phonesList={phonesList} />}
+        />
+      </Routes>
     </div>
   );
 }
