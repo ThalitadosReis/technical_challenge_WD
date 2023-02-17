@@ -8,7 +8,9 @@ export default function PhonesList(props) {
       {phonesList.map((phone) => {
         return (
           <li key={phone.id}>
-            <Link to={`/phones/${phone.id}`}>{phone.name}</Link>
+            <Link to={`/phones/${phone.id}`}>
+              {phone.name}
+            </Link>
           </li>
         );
       })}
